@@ -1,18 +1,18 @@
 import React from 'react';
-import './App.scss';
-import { WeatherNow } from './components/WeatherNow/WeatherNow';
-import { WeatherWeek } from './components/WeatherWeek/WeatherWeek';
-import { Navbar } from './components/Navbar/Navbar';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import Layout from './hoc/Layout/Layout';
+import Weather from './containers/Weather/Weather';
+import Settings from './containers/Settings/Settings';
 
-const App: React.FC = () => {
+const App: React.FunctionComponent = () => {
   return (
-    <div className='App'>
-      <Navbar />
-      <WeatherNow />
-      <div className='container'>
-        <WeatherWeek />
-      </div>
-    </div>
+    <Layout>
+      <Switch>
+        <Route path='/' exact component={Weather} />
+        <Route path='/settings' component={Settings} />
+        <Redirect to='/' />
+      </Switch>
+    </Layout>
   );
 };
 

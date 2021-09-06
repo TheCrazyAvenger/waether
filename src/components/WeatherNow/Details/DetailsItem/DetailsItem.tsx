@@ -1,5 +1,5 @@
 import React from 'react';
-import './DetailsItem.scss';
+import Grid from '@material-ui/core/Grid';
 
 type DetailsItemProps = {
   icon: string;
@@ -8,9 +8,15 @@ type DetailsItemProps = {
 
 export const DetailsItem: React.FC<DetailsItemProps> = ({ icon, value }) => {
   return (
-    <div className='DetailsItem'>
-      <i className='material-icons'>{icon}</i>
-      <p className='details-value'>{value}</p>
-    </div>
+    <Grid item>
+      <Grid container justifyContent='center' spacing={1}>
+        <Grid item>
+          <i className='material-icons'>{icon}</i>
+        </Grid>
+        <Grid item>
+          <p className='details-value'>{value}</p>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
