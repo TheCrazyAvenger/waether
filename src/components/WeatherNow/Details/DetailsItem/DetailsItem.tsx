@@ -6,7 +6,10 @@ type DetailsItemProps = {
   value: string;
 };
 
-export const DetailsItem: React.FC<DetailsItemProps> = ({ icon, value }) => {
+export const DetailsItem: React.FunctionComponent<DetailsItemProps> = ({
+  icon,
+  value,
+}) => {
   return (
     <Grid item>
       <Grid container justifyContent='center' spacing={1}>

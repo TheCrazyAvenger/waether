@@ -1,12 +1,15 @@
 import React from 'react';
+import { useTypedSelector } from '../../../store/hooks/useTypedSelector';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import HelpIcon from '@material-ui/icons/Help';
 import Typography from '@material-ui/core/Typography';
+import CardMedia from '@material-ui/core/CardMedia';
 
 type WeekDayProps = {
   day: string;
   number: number;
-  monthDay: number;
+  info: { [key: string]: any };
 };
 
 const useStyles = makeStyles({
@@ -22,7 +25,7 @@ const useStyles = makeStyles({
     color: 'black',
   },
   logo: {
-    width: 30,
+    width: 50,
     height: 30,
   },
 });
@@ -30,15 +33,23 @@ const useStyles = makeStyles({
 export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
   day,
   number,
-  monthDay,
+  info,
 }) => {
+  const description = useTypedSelector((state) => state.weather.description);
   const classes = useStyles();
-  let logo = require('../../../images/cloudy.png');
 
-  const renderDay = (className: any) => {
+  const weatherInfo = info;
+  const time = weatherInfo['dt_txt'];
+  const temp = weatherInfo.main.temp;
+  const icon = weatherInfo.weather[0].icon;
+
+  const date = new Date(time);
+  const dateDay = date.getDate();
+
+  const renderDay = (className: string) => {
     return (
-      <p className={className}>{`${monthDay}, ${
-        number === 0 ? 'Сегодня' : number === 1 ? 'Завтра' : day
+      <p className={className}>{`${dateDay}, ${
+        number === 0 ? 'Today' : number === 1 ? 'Tomorrow' : day
       }`}</p>
     );
   };
@@ -47,7 +58,7 @@ export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
     <Grid item className={classes.root}>
       <Grid container justifyContent='space-between' alignItems='center'>
         <Grid item>
-          {day === 'Суббота' || day === 'Воскресенье'
+          {day === 'Saturday' || day === 'Sunday'
             ? renderDay(classes.weekends)
             : renderDay(classes.weekDay)}
         </Grid>
@@ -59,10 +70,17 @@ export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
             spacing={1}
           >
             <Grid item>
-              <img className={classes.logo} src={logo.default} alt='cloudy' />
+              {description ? (
+                <CardMedia
+                  className={classes.logo}
+                  image={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+                />
+              ) : (
+                <HelpIcon fontSize={'large'} />
+              )}
             </Grid>
             <Grid item>
-              <Typography variant='h5'>15°</Typography>
+              <Typography variant='h5'>{`${Math.round(temp)}°`}</Typography>
             </Grid>
           </Grid>
         </Grid>

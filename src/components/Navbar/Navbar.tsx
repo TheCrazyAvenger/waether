@@ -8,7 +8,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { IconButton } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import { openDrawerMenu } from '../../store/actionCreator/drawer';
+import { toggleDrawerMenu } from '../../store/actionCreator/drawer';
+import { useTypedSelector } from '../../store/hooks/useTypedSelector';
 
 const useStyles = makeStyles({
   root: {
@@ -27,28 +28,29 @@ const useStyles = makeStyles({
 export const Navbar: React.FunctionComponent = () => {
   const classes = useStyles();
 
+  const cityName = useTypedSelector((state) => state.weather.name);
+  const country = useTypedSelector((state) => state.weather.country);
+
   const dispatch = useDispatch();
 
-  if (window.location.pathname !== '/settings') {
-    return (
-      <AppBar position='static' className={classes.root}>
-        <Toolbar className={classes.container}>
-          <IconButton
-            onClick={() => dispatch(openDrawerMenu())}
-            className={classes.button}
-          >
-            <MenuIcon fontSize='large' />
-          </IconButton>
-          <Typography variant='h6'>Novopolotsk, BLR</Typography>
-          <IconButton className={classes.button}>
-            <NavLink to='/settings'>
-              <SettingsIcon fontSize='large' />
-            </NavLink>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-    );
-  } else {
-    return null;
-  }
+  return (
+    <AppBar position='static' className={classes.root}>
+      <Toolbar className={classes.container}>
+        <IconButton
+          onClick={() => dispatch(toggleDrawerMenu())}
+          className={classes.button}
+        >
+          <MenuIcon fontSize='large' />
+        </IconButton>
+        <Typography variant='h6'>
+          {cityName && country ? `${cityName}, ${country}` : 'No data'}
+        </Typography>
+        <IconButton className={classes.button}>
+          <NavLink to='/settings'>
+            <SettingsIcon fontSize='large' />
+          </NavLink>
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+  );
 };

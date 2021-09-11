@@ -1,14 +1,24 @@
+import { TOGGLE_DRAWER, SEARCH_CITY } from '../actionCreator/actionTypes';
+
 export interface DrawerState {
   openDrawer: boolean;
-}
-
-export enum DrawerActionTypes {
-  OPEN_DRAWER = 'OPEN_DRAWER',
+  name: string | null;
+  country: string | null;
+  temp: number | null;
+  icon: string | null;
 }
 
 interface OpenDrawerAction {
-  type: DrawerActionTypes.OPEN_DRAWER;
+  type: typeof TOGGLE_DRAWER;
   payload: boolean;
 }
 
-export type DrawerAction = OpenDrawerAction;
+interface SearchCityAction {
+  type: typeof SEARCH_CITY;
+  name: string | null;
+  country: string | null;
+  temp: number | null;
+  icon: string | null;
+}
+
+export type DrawerAction = OpenDrawerAction | SearchCityAction;

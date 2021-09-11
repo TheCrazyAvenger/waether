@@ -8,6 +8,7 @@ import bg from '../../images/bg.jpg';
 const useStyles = makeStyles({
   root: {
     maxWidth: 410,
+    minHeight: '100vh',
     margin: '0 auto',
     padding: 10,
     background: `url(${bg}) center no-repeat fixed`,
@@ -19,8 +20,8 @@ const Layout: React.FunctionComponent = (props) => {
 
   return (
     <Grid className={classes.root}>
-      <DrawerMenu />
       <Navbar />
+      <DrawerMenu />
       <Grid>{props.children}</Grid>
     </Grid>
   );

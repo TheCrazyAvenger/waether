@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import { DetailsItem } from './DetailsItem/DetailsItem';
 
-export const Details: React.FC = () => {
+type DetailsProps = {
+  humidity: number;
+  pressure: number;
+  wind: number;
+};
+
+export const Details: React.FunctionComponent<DetailsProps> = ({
+  humidity,
+  pressure,
+  wind,
+}) => {
   return (
     <Grid container justifyContent='center' spacing={5}>
-      <DetailsItem icon='tonality' value='1009 hpa' />
-      <DetailsItem icon='opacity' value='74%' />
-      <DetailsItem icon='grain' value='4 m/s' />
+      <DetailsItem value={`${pressure} hpa`} icon='tonality' />
+      <DetailsItem value={`${humidity} %`} icon='opacity' />
+      <DetailsItem value={`${Math.round(wind)} m/s`} icon='grain' />
     </Grid>
   );
 };
