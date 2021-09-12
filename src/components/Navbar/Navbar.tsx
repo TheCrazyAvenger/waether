@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AppBar from '@material-ui/core/AppBar';
@@ -25,8 +25,10 @@ const useStyles = makeStyles({
   },
 });
 
-export const Navbar: React.FunctionComponent = () => {
+export const Navbar: React.FunctionComponent = (props) => {
   const classes = useStyles();
+
+  const location = useLocation().pathname;
 
   const cityName = useTypedSelector((state) => state.weather.name);
   const country = useTypedSelector((state) => state.weather.country);
@@ -43,11 +45,15 @@ export const Navbar: React.FunctionComponent = () => {
           <MenuIcon fontSize='large' />
         </IconButton>
         <Typography variant='h6'>
-          {cityName && country ? `${cityName}, ${country}` : 'No data'}
+          {cityName && country
+            ? `${cityName}, ${country}`
+            : location === '/settings'
+            ? 'Settings'
+            : 'No data'}
         </Typography>
-        <IconButton className={classes.button}>
+        <IconButton>
           <NavLink to='/settings'>
-            <SettingsIcon fontSize='large' />
+            <SettingsIcon className={classes.button} fontSize='large' />
           </NavLink>
         </IconButton>
       </Toolbar>

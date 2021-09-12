@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Navbar } from '../../components/Navbar/Navbar';
 import { WeatherNow } from '../../components/WeatherNow/WeatherNow';
 import { WeatherWeek } from '../../components/WeatherWeek/WeatherWeek';
 import { fetchWeather } from '../../store/actionCreator/weather';
@@ -26,10 +27,12 @@ const Weather: React.FunctionComponent = () => {
     } else {
       dispatch(fetchWeather());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
+      <Navbar />
       <WeatherNow
         temp={temperature}
         humidity={humidity}

@@ -7,12 +7,18 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useTypedSelector } from '../../store/hooks/useTypedSelector';
+import {
+  AddressSuggestions,
+  DaDataSuggestion,
+  DaDataAddress,
+} from 'react-dadata';
 import { toggleDrawerMenu } from '../../store/actionCreator/drawer';
-import { AppBar, Toolbar, TextField } from '@material-ui/core';
+import { AppBar, Toolbar } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import { useDispatch } from 'react-redux';
 import { searchCity } from '../../store/actionCreator/drawer';
 import { fetchWeather } from '../../store/actionCreator/weather';
+import 'react-dadata/dist/react-dadata.css';
 
 const useStyles = makeStyles({
   root: {
@@ -46,7 +52,9 @@ export const DrawerMenu: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const [inputValue, setInputValue] = useState<string>('');
+  const [value, setValue] = useState<
+    DaDataSuggestion<DaDataAddress> | undefined
+  >();
 
   const cityName = localStorage.getItem('cityName');
 
@@ -54,22 +62,22 @@ export const DrawerMenu: React.FunctionComponent = () => {
     if (cityName) {
       dispatch(searchCity(cityName));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    dispatch(searchCity(e.target.value));
-  };
-
-  const searchHandler = () => {
-    if (name) dispatch(fetchWeather(name));
-    dispatch(toggleDrawerMenu());
-    setInputValue('');
-  };
+  useEffect(() => {
+    if (value) {
+      const city = value.data.city?.toString();
+      if (city) {
+        dispatch(fetchWeather(city));
+        dispatch(searchCity(city));
+      }
+    }
+  }, [value, dispatch]);
 
   const resultItem = () => {
     return (
-      <Button onClick={searchHandler}>
+      <Button>
         <Grid
           container
           className={classes.search}
@@ -101,12 +109,16 @@ export const DrawerMenu: React.FunctionComponent = () => {
     >
       <AppBar position='static'>
         <Toolbar className={classes.root}>
-          <TextField
-            value={inputValue}
-            className={classes.textfield}
-            id='standard-basic'
-            onChange={changeHandler}
-            label='Enter city name'
+          <AddressSuggestions
+            token='14dc84f607aa8f84c2cf9aac0cc7f04598264746'
+            value={value}
+            onChange={setValue}
+            filterLanguage='en'
+            filterLocations={[
+              {
+                country: '*',
+              },
+            ]}
           />
         </Toolbar>
       </AppBar>

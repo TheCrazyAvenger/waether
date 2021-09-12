@@ -22,7 +22,7 @@ export const fetchWeather = (cityName: string = 'Minsk') => {
       const { temp, humidity, pressure } = currentTemp;
       const { speed } = wind;
       const { description, icon } = weatherInfo;
-
+      console.log(responce.data);
       dispatch({
         type: FETCH_WEATHER_SUCCESS,
         country,
@@ -47,6 +47,7 @@ const getWeather = (list: Array<any>) => {
   const newList: Array<object> = [];
   const days = list;
 
+  // eslint-disable-next-line
   days.map((item) => {
     const date = new Date(item['dt_txt']);
     const hour = date.getHours();
