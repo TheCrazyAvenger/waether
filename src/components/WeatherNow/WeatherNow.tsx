@@ -18,10 +18,14 @@ type WeatherNowProps = {
 const useStyles = makeStyles({
   root: {
     padding: '50px 0',
+    textAlign: 'center',
   },
   icon: {
     width: 80,
     height: 60,
+  },
+  update: {
+    marginTop: 15,
   },
 });
 
@@ -61,6 +65,9 @@ export const WeatherNow: React.FunctionComponent<WeatherNowProps> = ({
       </Grid>
       <Grid item>
         <Details humidity={humidity} pressure={pressure} wind={wind} />
+        <Typography className={classes.update}>
+          Last Update: {`${new Date().toLocaleString()}`}
+        </Typography>
       </Grid>
     </Grid>
   );

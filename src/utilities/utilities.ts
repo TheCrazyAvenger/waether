@@ -9,3 +9,10 @@ export const updateWeek = () => {
 
   return currentWeek;
 };
+
+export const getDarkMode = () => {
+  let dark: string | boolean | null = localStorage.getItem('dark');
+  if (dark === 'true') dark = true;
+  if (dark === 'false') dark = false;
+  return dark;
+};

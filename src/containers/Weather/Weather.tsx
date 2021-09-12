@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Navbar } from '../../components/Navbar/Navbar';
 import { WeatherNow } from '../../components/WeatherNow/WeatherNow';
 import { WeatherWeek } from '../../components/WeatherWeek/WeatherWeek';
 import { fetchWeather } from '../../store/actionCreator/weather';
 import { useTypedSelector } from '../../store/hooks/useTypedSelector';
+import { setDarkMod } from '../../store/actionCreator/settings';
+import { getDarkMode } from '../../utilities/utilities';
 
 const Weather: React.FunctionComponent = () => {
   const sunrise = useTypedSelector((state) => state.weather.sunrise);
@@ -20,16 +23,23 @@ const Weather: React.FunctionComponent = () => {
 
   const cityName = localStorage.getItem('cityName');
 
+  const dark = getDarkMode();
+
   useEffect(() => {
     if (cityName) {
       dispatch(fetchWeather(cityName));
     } else {
       dispatch(fetchWeather());
     }
+    if (dark) {
+      dispatch(setDarkMod(Boolean(dark)));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
+      <Navbar />
       <WeatherNow
         temp={temperature}
         humidity={humidity}

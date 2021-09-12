@@ -13,16 +13,12 @@ type WeekDayProps = {
 };
 
 const useStyles = makeStyles({
-  weekDay: {
-    color: 'black',
-  },
   weekends: {
     color: 'red',
   },
   root: {
     borderBottom: 'rgb(170, 161, 161) 1px solid',
     padding: 15,
-    color: 'black',
   },
   logo: {
     width: 50,
@@ -60,7 +56,7 @@ export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
         <Grid item>
           {day === 'Saturday' || day === 'Sunday'
             ? renderDay(classes.weekends)
-            : renderDay(classes.weekDay)}
+            : renderDay('')}
         </Grid>
         <Grid item>
           <Grid
