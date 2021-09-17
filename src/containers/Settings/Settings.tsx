@@ -1,12 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTypedSelector } from '../../store/hooks/useTypedSelector';
 import { useDispatch } from 'react-redux';
 import { setDarkMod } from '../../store/actionCreator/settings';
-import { Grid, Paper, Checkbox, Button } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  Checkbox,
+  Button,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { NavLink } from 'react-router-dom';
 import { getDarkMode } from '../../utilities/utilities';
+import { fetchWeather } from '../../store/actionCreator/weather';
 
 const useStyles = makeStyles({
   root: {
@@ -32,7 +40,25 @@ const Settings: React.FunctionComponent = () => {
   const darkMode = useTypedSelector((state) => state.settings.darkMode);
   const dispatch = useDispatch();
 
+  const unitsType = localStorage.getItem('unitsType');
+  const [units, setUnits] = useState<string>(unitsType ? unitsType : 'metric');
+
   const dark = getDarkMode();
+
+  const cityName = localStorage.getItem('cityName');
+
+  useEffect(() => {
+    if (cityName && unitsType) {
+      dispatch(fetchWeather(cityName, unitsType));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unitsType]);
+
+  const changeUnits = (e: React.ChangeEvent<any>) => {
+    setUnits(e.target.value);
+    localStorage.setItem('unitsType', e.target.value);
+  };
 
   useEffect(() => {
     if (dark) {
@@ -62,6 +88,21 @@ const Settings: React.FunctionComponent = () => {
           </Grid>
           <Grid item>
             <Checkbox checked={darkMode} onClick={setTheme} />
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          justifyContent='space-between'
+          className={classes.settings}
+        >
+          <Grid item>
+            <Typography variant='h5'>Units</Typography>
+          </Grid>
+          <Grid item>
+            <Select value={units} onChange={changeUnits}>
+              <MenuItem value='metric'>Metric</MenuItem>
+              <MenuItem value='standart'>Standart</MenuItem>
+            </Select>
           </Grid>
         </Grid>
         <NavLink to={'/'}>

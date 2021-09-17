@@ -2,11 +2,14 @@ import axios from 'axios';
 import { Dispatch } from 'redux';
 import { FETCH_WEATHER_SUCCESS } from './actionTypes';
 
-export const fetchWeather = (cityName: string = 'Minsk') => {
+export const fetchWeather = (
+  cityName: string = 'Minsk',
+  units: string = 'metric'
+) => {
   return async (dispatch: Dispatch) => {
     try {
       const responce = await axios.get(
-        `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&appid=7fb17b0400480080f824b5827af64eca`
+        `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=${units}&appid=7fb17b0400480080f824b5827af64eca`
       );
 
       const cityInfo = responce.data.city;
@@ -16,13 +19,16 @@ export const fetchWeather = (cityName: string = 'Minsk') => {
       const wind = currentWeather.wind;
       const weatherInfo = currentWeather.weather[0];
 
-      const weekWeather = getWeather(list);
+      const weekWeather = getWeather(list, 12);
+      const nightWeather = getWeather(list, 3);
 
       const { country, name, sunrise, sunset } = cityInfo;
-      const { temp, humidity, pressure } = currentTemp;
+      const { temp, feels_like, humidity, pressure } = currentTemp;
       const { speed } = wind;
       const { description, icon } = weatherInfo;
-      console.log(responce.data);
+
+      localStorage.setItem('cityName', name);
+
       dispatch({
         type: FETCH_WEATHER_SUCCESS,
         country,
@@ -30,12 +36,14 @@ export const fetchWeather = (cityName: string = 'Minsk') => {
         sunrise,
         sunset,
         temp,
+        feels_like,
         humidity,
         pressure,
         wind: speed,
         description,
         icon,
         weekWeather,
+        nightWeather,
       });
     } catch (e) {
       console.log(e);
@@ -43,7 +51,7 @@ export const fetchWeather = (cityName: string = 'Minsk') => {
   };
 };
 
-const getWeather = (list: Array<any>) => {
+const getWeather = (list: Array<any>, time: number) => {
   const newList: Array<object> = [];
   const days = list;
 
@@ -51,7 +59,7 @@ const getWeather = (list: Array<any>) => {
   days.map((item) => {
     const date = new Date(item['dt_txt']);
     const hour = date.getHours();
-    if (hour === 15) newList.push(item);
+    if (hour === time) newList.push(item);
   });
 
   return newList;

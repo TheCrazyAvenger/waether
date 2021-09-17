@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 
 type WeatherNowProps = {
   temp: number;
+  feelsLike: number;
   humidity: number;
   pressure: number;
   wind: number;
@@ -17,7 +18,7 @@ type WeatherNowProps = {
 
 const useStyles = makeStyles({
   root: {
-    padding: '50px 0',
+    padding: '30px 0 50px',
     textAlign: 'center',
   },
   icon: {
@@ -31,6 +32,7 @@ const useStyles = makeStyles({
 
 export const WeatherNow: React.FunctionComponent<WeatherNowProps> = ({
   temp,
+  feelsLike,
   humidity,
   pressure,
   wind,
@@ -57,10 +59,11 @@ export const WeatherNow: React.FunctionComponent<WeatherNowProps> = ({
             <Typography variant='h2'>{`${Math.round(temp)}°`}</Typography>
           </Grid>
         </Grid>
-        <Grid container justifyContent='center'>
+        <Grid container direction='column' justifyContent='center'>
           <Typography variant='h6'>
             {description ? description : 'No data'}
           </Typography>
+          <Typography>Feels like: {`${Math.round(feelsLike)}°`}</Typography>
         </Grid>
       </Grid>
       <Grid item>

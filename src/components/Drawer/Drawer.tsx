@@ -10,14 +10,13 @@ import { toggleDrawerMenu } from '../../store/actionCreator/drawer';
 import { AppBar, Toolbar } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import { useDispatch } from 'react-redux';
-import { searchCity } from '../../store/actionCreator/drawer';
 import { fetchWeather } from '../../store/actionCreator/weather';
 import 'react-dadata/dist/react-dadata.css';
 
 const useStyles = makeStyles({
   root: {
     padding: 20,
-    width: 300,
+    minWidth: 300,
   },
   results: {
     padding: 20,
@@ -26,6 +25,7 @@ const useStyles = makeStyles({
   search: {
     padding: 10,
     borderRadius: 5,
+    marginBottom: 30,
     boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
   },
   logo: {
@@ -36,10 +36,10 @@ const useStyles = makeStyles({
 
 export const DrawerMenu: React.FunctionComponent = () => {
   const openDrawer = useTypedSelector((state) => state.drawer.openDrawer);
-  const name = useTypedSelector((state) => state.drawer.name);
-  const country = useTypedSelector((state) => state.drawer.country);
-  const temp = useTypedSelector((state) => state.drawer.temp);
-  const icon = useTypedSelector((state) => state.drawer.icon);
+  const name = useTypedSelector((state) => state.weather.name);
+  const country = useTypedSelector((state) => state.weather.country);
+  const temp = useTypedSelector((state) => state.weather.temp);
+  const icon = useTypedSelector((state) => state.weather.icon);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -48,21 +48,11 @@ export const DrawerMenu: React.FunctionComponent = () => {
     DaDataSuggestion<DaDataAddress> | undefined
   >();
 
-  const cityName = localStorage.getItem('cityName');
-
-  useEffect(() => {
-    if (cityName) {
-      dispatch(searchCity(cityName));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (value) {
       const city = value.data.city?.toString();
       if (city) {
         dispatch(fetchWeather(city));
-        dispatch(searchCity(city));
       }
     }
   }, [value, dispatch]);

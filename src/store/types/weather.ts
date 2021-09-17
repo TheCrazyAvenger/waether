@@ -8,10 +8,12 @@ export interface WeatherState {
   humidity: number;
   pressure: number;
   temp: number;
+  feels_like: number;
   wind: number;
   description: string | null;
   icon: string | null;
   weekWeather: Array<object> | null;
+  nightWeather: Array<object> | null;
 }
 
 interface WeatherFetchSuccess {
@@ -23,10 +25,12 @@ interface WeatherFetchSuccess {
   humidity: number;
   pressure: number;
   temp: number;
+  feels_like: number;
   wind: number;
   description: string | null;
   icon: string | null;
   weekWeather: Array<object> | null;
+  nightWeather: Array<object> | null;
 }
 
 export type WeatherAction = WeatherFetchSuccess;

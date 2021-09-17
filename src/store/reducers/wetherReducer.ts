@@ -9,10 +9,12 @@ const initialState: WeatherState = {
   humidity: 0,
   pressure: 0,
   temp: 0,
+  feels_like: 0,
   wind: 0,
   description: null,
   icon: null,
   weekWeather: null,
+  nightWeather: null,
 };
 
 export const weatherReducer = (
@@ -30,10 +32,12 @@ export const weatherReducer = (
         humidity: action.humidity,
         pressure: action.pressure,
         temp: action.temp,
+        feels_like: action.feels_like,
         wind: action.wind,
         description: action.description,
         icon: action.icon,
         weekWeather: action.weekWeather,
+        nightWeather: action.nightWeather,
       };
     }
     default:

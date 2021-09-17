@@ -13,18 +13,35 @@ import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import openWeatherLogo from '../../images/OpenWeather-Logo-Light.png';
 import openWeatherLogoDark from '../../images/OpenWeather-Logo-Dark.png';
 import { useTypedSelector } from '../../store/hooks/useTypedSelector';
+import mapImage from '../../images/map.png';
 
 type WeatherWeekProps = {
   sunrise: string | null;
   sunset: string | null;
   weekWeather: Array<object> | null;
+  nightWeather: Array<object> | null;
 };
 
 const useStyles = makeStyles({
   root: {
+    position: 'relative',
     borderRadius: 10,
-    paddingTop: '20px',
+    paddingTop: 60,
     textAlign: 'center',
+  },
+  map: {
+    width: 200,
+    position: 'absolute',
+    top: -30,
+    left: '50%',
+    padding: '5px 10px',
+    paddingRight: 20,
+    transform: 'translateX(-50%)',
+    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
+  },
+  mapImg: {
+    width: 50,
+    height: 50,
   },
   weatherMap: {
     fontWeight: 'bold',
@@ -62,18 +79,35 @@ export const WeatherWeek: React.FunctionComponent<WeatherWeekProps> = ({
   sunrise,
   sunset,
   weekWeather,
+  nightWeather,
 }) => {
   const [week, setWeek] = useState(weekDay);
   const weather = weekWeather;
+  const night = nightWeather;
 
   const darkMode = useTypedSelector((state) => state.settings.darkMode);
 
-  const sunriseHour = new Date(Number(sunrise) * 1000).getHours();
-  const sunriseMinutes = new Date(Number(sunrise) * 1000).getMinutes();
-  const sunsetHour = new Date(Number(sunset) * 1000).getHours();
-  const sunsetMinutes = new Date(Number(sunset) * 1000).getMinutes();
+  const checkTime = (value: number) => {
+    if (value < 10) {
+      return '0' + value;
+    } else {
+      return value;
+    }
+  };
+
+  const sunriseHour = checkTime(new Date(Number(sunrise) * 1000).getHours());
+  const sunriseMinutes = checkTime(
+    new Date(Number(sunrise) * 1000).getMinutes()
+  );
+  const sunsetHour = checkTime(new Date(Number(sunset) * 1000).getHours());
+  const sunsetMinutes = checkTime(new Date(Number(sunset) * 1000).getMinutes());
 
   const classes = useStyles();
+
+  const openMap = () => {
+    window.open('https://openweathermap.org/weathermap', '_blank');
+  };
+
   const openWeatherSite = () =>
     window.open('https://openweathermap.org/', '_blank');
 
@@ -84,13 +118,31 @@ export const WeatherWeek: React.FunctionComponent<WeatherWeekProps> = ({
   return (
     <Paper>
       <Grid container direction='column' className={classes.root}>
+        <Paper className={classes.map}>
+          <Grid container>
+            <Button onClick={openMap}>
+              <Grid item>
+                <CardMedia className={classes.mapImg} image={mapImage} />
+              </Grid>
+              <Grid item>
+                <Typography>View on map</Typography>
+              </Grid>
+            </Button>
+          </Grid>
+        </Paper>
         <Typography variant='h5'>5 days forecast</Typography>
-        {weather ? (
+        {weather && night ? (
           week.map((day, i) => {
             const info = weather[i];
+            const infoNight = night[i];
             return i === 5 || i === 6 ? null : (
               <Grid className={classes.day} item key={i}>
-                <WeekDay info={info} day={day} number={i} />
+                <WeekDay
+                  info={info}
+                  infoNight={infoNight}
+                  day={day}
+                  number={i}
+                />
               </Grid>
             );
           })

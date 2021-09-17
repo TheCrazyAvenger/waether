@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
 
 type DetailsItemProps = {
   icon: string;
@@ -17,7 +18,7 @@ export const DetailsItem: React.FunctionComponent<DetailsItemProps> = ({
           <i className='material-icons'>{icon}</i>
         </Grid>
         <Grid item>
-          <p className='details-value'>{value}</p>
+          <Typography className='details-value'>{value}</Typography>
         </Grid>
       </Grid>
     </Grid>
