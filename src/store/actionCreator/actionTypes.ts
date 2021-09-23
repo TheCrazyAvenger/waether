@@ -3,3 +3,5 @@ export const FETCH_WEATHER_SUCCESS = 'FETCH_WEATHER_SUCCESS';
 export const TOGGLE_DRAWER = 'TOGGLE_DRAWER';
 
 export const SET_DARK_MOD = 'SET_DARK_MOD';
+
+export const SET_CITIES = 'SET_CITIES';

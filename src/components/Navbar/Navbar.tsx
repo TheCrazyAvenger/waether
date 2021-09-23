@@ -51,11 +51,11 @@ export const Navbar: React.FunctionComponent = () => {
           <MenuIcon fontSize='large' />
         </IconButton>
         <Typography variant='h6'>{navTitle}</Typography>
-        <IconButton>
-          <NavLink to='/settings'>
+        <NavLink to='/settings'>
+          <IconButton>
             <SettingsIcon className={classes.button} fontSize='large' />
-          </NavLink>
-        </IconButton>
+          </IconButton>
+        </NavLink>
       </Toolbar>
     </AppBar>
   );

@@ -1,5 +1,8 @@
 import { WeatherState, WeatherAction } from '../types/weather';
-import { FETCH_WEATHER_SUCCESS } from '../actionCreator/actionTypes';
+import {
+  FETCH_WEATHER_SUCCESS,
+  SET_CITIES,
+} from '../actionCreator/actionTypes';
 
 const initialState: WeatherState = {
   name: null,
@@ -16,6 +19,7 @@ const initialState: WeatherState = {
   icon: null,
   weekWeather: null,
   nightWeather: null,
+  cities: [],
 };
 
 export const weatherReducer = (
@@ -40,6 +44,12 @@ export const weatherReducer = (
         icon: action.icon,
         weekWeather: action.weekWeather,
         nightWeather: action.nightWeather,
+      };
+    }
+    case SET_CITIES: {
+      return {
+        ...state,
+        cities: action.cities,
       };
     }
     default:

@@ -1,4 +1,7 @@
-import { FETCH_WEATHER_SUCCESS } from '../actionCreator/actionTypes';
+import {
+  FETCH_WEATHER_SUCCESS,
+  SET_CITIES,
+} from '../actionCreator/actionTypes';
 
 export interface WeatherState {
   name: string | null;
@@ -15,6 +18,7 @@ export interface WeatherState {
   icon: string | null;
   weekWeather: Array<object> | null;
   nightWeather: Array<object> | null;
+  cities: Array<string> | [];
 }
 
 interface WeatherFetchSuccess {
@@ -35,4 +39,9 @@ interface WeatherFetchSuccess {
   nightWeather: Array<object>;
 }
 
-export type WeatherAction = WeatherFetchSuccess;
+interface SetCities {
+  type: typeof SET_CITIES;
+  cities: Array<string> | [];
+}
+
+export type WeatherAction = WeatherFetchSuccess | SetCities;

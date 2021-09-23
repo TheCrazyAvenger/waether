@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
-import { FETCH_WEATHER_SUCCESS } from './actionTypes';
+import { FETCH_WEATHER_SUCCESS, SET_CITIES } from './actionTypes';
 import { getData } from '@utilities/utilities';
 
 const CITY = 'Minsk';
 const UNITS = 'metric';
 
 export const fetchWeather = (cityName?: string, units?: string) => {
-  const unitsURL = getData(cityName || null, 'unitsType', UNITS);
+  const unitsURL = getData(units || null, 'unitsType', UNITS);
   const cityURL = getData(cityName || null, 'cityName', CITY);
+  console.log(unitsURL);
 
   return async (dispatch: Dispatch) => {
     try {
@@ -55,6 +56,30 @@ export const fetchWeather = (cityName?: string, units?: string) => {
     } catch (e) {
       console.log(e);
     }
+  };
+};
+
+export const setCitys = (city?: string | null, deleteCity: string = '') => {
+  const citiesList = localStorage.getItem('cities');
+
+  let tempArr: Array<string>;
+  if (citiesList) {
+    tempArr = JSON.parse(citiesList);
+  } else {
+    tempArr = [];
+  }
+  if (city) {
+    tempArr.push(city);
+  }
+
+  const cities = tempArr.filter(
+    (v, i, a) => a.indexOf(v) === i && v.split(', ')[0] !== deleteCity
+  );
+  localStorage.setItem('cities', JSON.stringify(cities));
+
+  return {
+    type: SET_CITIES,
+    cities,
   };
 };
 
