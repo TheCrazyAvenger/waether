@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { weekDay } from '../../utilities/constants';
+import { weekDay } from '@utilities/constants';
 import Grid from '@material-ui/core/Grid';
 import CardMedia from '@material-ui/core/CardMedia';
 import { WeekDay } from './WeekDay/WeekDay';
 import { Button, Paper, Typography } from '@material-ui/core';
-import { updateWeek } from '../../utilities/utilities';
+import { updateWeek } from '@utilities/utilities';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
-import openWeatherLogo from '../../images/OpenWeather-Logo-Light.png';
-import openWeatherLogoDark from '../../images/OpenWeather-Logo-Dark.png';
-import { useTypedSelector } from '../../store/hooks/useTypedSelector';
-import mapImage from '../../images/map.png';
+import openWeatherLogo from '@images/OpenWeather-Logo-Light.png';
+import openWeatherLogoDark from '@images/OpenWeather-Logo-Dark.png';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
+import { checkTime } from '@utilities/utilities';
+import mapImage from '@images/map.png';
 
 type WeatherWeekProps = {
   sunrise: string | null;
@@ -87,14 +88,6 @@ export const WeatherWeek: React.FunctionComponent<WeatherWeekProps> = ({
 
   const darkMode = useTypedSelector((state) => state.settings.darkMode);
 
-  const checkTime = (value: number) => {
-    if (value < 10) {
-      return '0' + value;
-    } else {
-      return value;
-    }
-  };
-
   const sunriseHour = checkTime(new Date(Number(sunrise) * 1000).getHours());
   const sunriseMinutes = checkTime(
     new Date(Number(sunrise) * 1000).getMinutes()
@@ -115,6 +108,29 @@ export const WeatherWeek: React.FunctionComponent<WeatherWeekProps> = ({
     setWeek(updateWeek());
   }, []);
 
+  const getDays = useMemo(() => {
+    if (weather && night) {
+      return week.map((day, i) => {
+        const info = weather[i];
+        const infoNight = night[i];
+
+        if (i === 5 || i === 6) return null;
+
+        return (
+          <Grid className={classes.day} item key={i}>
+            <WeekDay info={info} infoNight={infoNight} day={day} number={i} />
+          </Grid>
+        );
+      });
+    } else {
+      return (
+        <Typography variant='h6' className={classes.error}>
+          No data
+        </Typography>
+      );
+    }
+  }, [classes.day, classes.error, night, weather, week]);
+
   return (
     <Paper>
       <Grid container direction='column' className={classes.root}>
@@ -131,26 +147,7 @@ export const WeatherWeek: React.FunctionComponent<WeatherWeekProps> = ({
           </Grid>
         </Paper>
         <Typography variant='h5'>5 days forecast</Typography>
-        {weather && night ? (
-          week.map((day, i) => {
-            const info = weather[i];
-            const infoNight = night[i];
-            return i === 5 || i === 6 ? null : (
-              <Grid className={classes.day} item key={i}>
-                <WeekDay
-                  info={info}
-                  infoNight={infoNight}
-                  day={day}
-                  number={i}
-                />
-              </Grid>
-            );
-          })
-        ) : (
-          <Typography variant='h6' className={classes.error}>
-            No data
-          </Typography>
-        )}
+        {getDays}
         <Grid item className={classes.weatherMap}>
           <Typography variant='h5'>Daylight hours</Typography>
           <Grid

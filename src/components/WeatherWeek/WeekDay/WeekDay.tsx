@@ -1,9 +1,7 @@
 import React from 'react';
-import { useTypedSelector } from '../../../store/hooks/useTypedSelector';
 import { makeStyles } from '@material-ui/core/styles';
-import { Details } from '../../WeatherNow/Details/Details';
+import { Details } from '@components/WeatherNow/Details/Details';
 import Grid from '@material-ui/core/Grid';
-import HelpIcon from '@material-ui/icons/Help';
 import Typography from '@material-ui/core/Typography';
 import CardMedia from '@material-ui/core/CardMedia';
 import {
@@ -11,6 +9,7 @@ import {
   AccordionDetails,
   AccordionSummary,
 } from '@material-ui/core';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
 
 type WeekDayProps = {
   day: string;
@@ -41,11 +40,11 @@ const useStyles = makeStyles({
   night: {
     color: 'rgb(170, 161, 161)',
   },
-  weatherStnd: {
+  stnd: {
     width: 160,
   },
-  weatherMetric: {
-    width: 135,
+  mtr: {
+    width: 140,
   },
 });
 
@@ -55,10 +54,9 @@ export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
   info,
   infoNight,
 }) => {
-  const description = useTypedSelector((state) => state.weather.description);
   const classes = useStyles();
 
-  const unitsType = localStorage.getItem('unitsType');
+  const units = useTypedSelector((state) => state.weather.units);
 
   const weatherInfo = info;
   const time = weatherInfo['dt_txt'];
@@ -73,11 +71,25 @@ export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
   const dateDay = date.getDate();
 
   const renderDay = (className: string) => {
-    return (
-      <p className={className}>{`${dateDay}, ${
-        number === 0 ? 'Today' : number === 1 ? 'Tomorrow' : day
-      }`}</p>
-    );
+    let name;
+    if (number === 0) {
+      name = 'Today';
+    } else {
+      if (number === 1) {
+        name = 'Tomorrow';
+      } else {
+        name = day;
+      }
+    }
+    return <p className={className}>{`${dateDay}, ${name}`}</p>;
+  };
+
+  const getDays = () => {
+    if (day === 'Saturday' || day === 'Sunday') {
+      return renderDay(classes.weekends);
+    } else {
+      return renderDay('');
+    }
   };
 
   return (
@@ -89,32 +101,22 @@ export const WeekDay: React.FunctionComponent<WeekDayProps> = ({
       >
         <Grid item className={classes.root}>
           <Grid container justifyContent='space-between' alignItems='center'>
-            <Grid item>
-              {day === 'Saturday' || day === 'Sunday'
-                ? renderDay(classes.weekends)
-                : renderDay('')}
-            </Grid>
+            <Grid item>{getDays()}</Grid>
             <Grid item>
               <Grid
                 container
                 className={
-                  unitsType === 'metric' || unitsType === null
-                    ? classes.weatherMetric
-                    : classes.weatherStnd
+                  units === 'metric' || !units ? classes.mtr : classes.stnd
                 }
                 justifyContent='space-between'
                 alignItems='center'
                 spacing={1}
               >
                 <Grid item>
-                  {description ? (
-                    <CardMedia
-                      className={classes.logo}
-                      image={`http://openweathermap.org/img/wn/${icon}@2x.png`}
-                    />
-                  ) : (
-                    <HelpIcon fontSize={'large'} />
-                  )}
+                  <CardMedia
+                    className={classes.logo}
+                    image={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+                  />
                 </Grid>
                 <Grid item>
                   <Typography variant='h5'>{`${Math.round(temp)}°`}</Typography>

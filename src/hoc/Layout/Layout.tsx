@@ -1,11 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { DrawerMenu } from '../../components/Drawer/Drawer';
-import bg from '../../images/bg.jpg';
-import bgDark from '../../images/bgDark.jpg';
+import { DrawerMenu } from '@components/Drawer/Drawer';
+import bg from '@images/bg.jpg';
+import bgDark from '@images/bgDark.jpg';
 
-import { useTypedSelector } from '../../store/hooks/useTypedSelector';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
 
 const Layout: React.FunctionComponent = (props) => {
   const darkMode = useTypedSelector((state) => state.settings.darkMode);

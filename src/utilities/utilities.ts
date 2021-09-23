@@ -16,3 +16,28 @@ export const getDarkMode = () => {
   if (dark === 'false') dark = false;
   return dark;
 };
+
+export const checkTime = (value: number) => {
+  if (value < 10) {
+    return '0' + value;
+  } else {
+    return value;
+  }
+};
+
+export const getData = (
+  prop: string | null,
+  type: string,
+  def: string | null
+) => {
+  if (prop) {
+    return prop;
+  } else {
+    const lc = localStorage.getItem(type);
+    if (lc) {
+      return lc;
+    } else {
+      return def;
+    }
+  }
+};

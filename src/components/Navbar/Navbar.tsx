@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,8 +8,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { IconButton } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import { toggleDrawerMenu } from '../../store/actionCreator/drawer';
-import { useTypedSelector } from '../../store/hooks/useTypedSelector';
+import { toggleDrawerMenu } from '@store/actionCreator/drawer';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
 
 const useStyles = makeStyles({
   root: {
@@ -25,15 +25,21 @@ const useStyles = makeStyles({
   },
 });
 
-export const Navbar: React.FunctionComponent = (props) => {
+export const Navbar: React.FunctionComponent = () => {
   const classes = useStyles();
-
-  const location = useLocation().pathname;
 
   const cityName = useTypedSelector((state) => state.weather.name);
   const country = useTypedSelector((state) => state.weather.country);
 
   const dispatch = useDispatch();
+
+  const navTitle = useMemo(() => {
+    if (cityName && country) {
+      return `${cityName}, ${country}`;
+    } else {
+      return 'No data';
+    }
+  }, [cityName, country]);
 
   return (
     <AppBar position='static' className={classes.root}>
@@ -44,13 +50,7 @@ export const Navbar: React.FunctionComponent = (props) => {
         >
           <MenuIcon fontSize='large' />
         </IconButton>
-        <Typography variant='h6'>
-          {cityName && country
-            ? `${cityName}, ${country}`
-            : location === '/settings'
-            ? 'Settings'
-            : 'No data'}
-        </Typography>
+        <Typography variant='h6'>{navTitle}</Typography>
         <IconButton>
           <NavLink to='/settings'>
             <SettingsIcon className={classes.button} fontSize='large' />

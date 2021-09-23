@@ -4,6 +4,7 @@ import { FETCH_WEATHER_SUCCESS } from '../actionCreator/actionTypes';
 const initialState: WeatherState = {
   name: null,
   country: null,
+  units: null,
   sunrise: null,
   sunset: null,
   humidity: 0,
@@ -26,6 +27,7 @@ export const weatherReducer = (
       return {
         ...state,
         name: action.name,
+        units: action.units,
         country: action.country,
         sunrise: action.sunrise,
         sunset: action.sunset,

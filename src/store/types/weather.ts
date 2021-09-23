@@ -2,6 +2,7 @@ import { FETCH_WEATHER_SUCCESS } from '../actionCreator/actionTypes';
 
 export interface WeatherState {
   name: string | null;
+  units: string | null;
   country: string | null;
   sunrise: string | null;
   sunset: string | null;
@@ -19,18 +20,19 @@ export interface WeatherState {
 interface WeatherFetchSuccess {
   type: typeof FETCH_WEATHER_SUCCESS;
   name: string;
+  units: string;
   country: string;
-  sunrise: string | null;
-  sunset: string | null;
+  sunrise: string;
+  sunset: string;
   humidity: number;
   pressure: number;
   temp: number;
   feels_like: number;
   wind: number;
-  description: string | null;
-  icon: string | null;
-  weekWeather: Array<object> | null;
-  nightWeather: Array<object> | null;
+  description: string;
+  icon: string;
+  weekWeather: Array<object>;
+  nightWeather: Array<object>;
 }
 
 export type WeatherAction = WeatherFetchSuccess;

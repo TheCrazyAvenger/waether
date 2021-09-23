@@ -1,15 +1,19 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 import { FETCH_WEATHER_SUCCESS } from './actionTypes';
+import { getData } from '@utilities/utilities';
 
-export const fetchWeather = (
-  cityName: string = 'Minsk',
-  units: string = 'metric'
-) => {
+const CITY = 'Minsk';
+const UNITS = 'metric';
+
+export const fetchWeather = (cityName?: string, units?: string) => {
+  const unitsURL = getData(cityName || null, 'unitsType', UNITS);
+  const cityURL = getData(cityName || null, 'cityName', CITY);
+
   return async (dispatch: Dispatch) => {
     try {
       const responce = await axios.get(
-        `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=${units}&appid=7fb17b0400480080f824b5827af64eca`
+        `http://api.openweathermap.org/data/2.5/forecast?q=${cityURL}&units=${unitsURL}&appid=7fb17b0400480080f824b5827af64eca`
       );
 
       const cityInfo = responce.data.city;
@@ -26,6 +30,8 @@ export const fetchWeather = (
       const { temp, feels_like, humidity, pressure } = currentTemp;
       const { speed } = wind;
       const { description, icon } = weatherInfo;
+
+      const units = unitsURL;
 
       localStorage.setItem('cityName', name);
 
@@ -44,6 +50,7 @@ export const fetchWeather = (
         icon,
         weekWeather,
         nightWeather,
+        units,
       });
     } catch (e) {
       console.log(e);

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { CardMedia, Grid, makeStyles, Typography } from '@material-ui/core';
-import { useTypedSelector } from '../../store/hooks/useTypedSelector';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
+import { toggleDrawerMenu } from '@store/actionCreator/drawer';
+import { fetchWeather } from '@store/actionCreator/weather';
 import {
   AddressSuggestions,
   DaDataSuggestion,
   DaDataAddress,
 } from 'react-dadata';
-import { toggleDrawerMenu } from '../../store/actionCreator/drawer';
+import 'react-dadata/dist/react-dadata.css';
 import { AppBar, Toolbar } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import { useDispatch } from 'react-redux';
-import { fetchWeather } from '../../store/actionCreator/weather';
-import 'react-dadata/dist/react-dadata.css';
 
 const useStyles = makeStyles({
   root: {
@@ -51,6 +51,7 @@ export const DrawerMenu: React.FunctionComponent = () => {
   useEffect(() => {
     if (value) {
       const city = value.data.city?.toString();
+
       if (city) {
         dispatch(fetchWeather(city));
       }

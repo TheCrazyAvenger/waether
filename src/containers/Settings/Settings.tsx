@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { useTypedSelector } from '../../store/hooks/useTypedSelector';
 import { useDispatch } from 'react-redux';
-import { setDarkMod } from '../../store/actionCreator/settings';
+import { NavLink } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -10,11 +9,12 @@ import {
   Button,
   Select,
   MenuItem,
+  Typography,
 } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import { NavLink } from 'react-router-dom';
-import { getDarkMode } from '../../utilities/utilities';
-import { fetchWeather } from '../../store/actionCreator/weather';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
+import { setDarkMod } from '@store/actionCreator/settings';
+import { getDarkMode } from '@utilities/utilities';
+import { fetchWeather } from '@store/actionCreator/weather';
 
 const useStyles = makeStyles({
   root: {
@@ -40,20 +40,12 @@ const Settings: React.FunctionComponent = () => {
   const darkMode = useTypedSelector((state) => state.settings.darkMode);
   const dispatch = useDispatch();
 
-  const unitsType = localStorage.getItem('unitsType');
+  const unitsType = useTypedSelector((state) => state.weather.units);
   const [units, setUnits] = useState<string>(unitsType ? unitsType : 'metric');
 
-  const dark = getDarkMode();
-
-  const cityName = localStorage.getItem('cityName');
-
   useEffect(() => {
-    if (cityName && unitsType) {
-      dispatch(fetchWeather(cityName, unitsType));
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unitsType]);
+    dispatch(fetchWeather());
+  }, [dispatch]);
 
   const changeUnits = (e: React.ChangeEvent<any>) => {
     setUnits(e.target.value);
@@ -61,11 +53,12 @@ const Settings: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
+    const dark = getDarkMode();
+
     if (dark) {
       dispatch(setDarkMod(Boolean(dark)));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const setTheme = () => {
     localStorage.setItem('dark', (!darkMode).toString());

@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Navbar } from '../../components/Navbar/Navbar';
-import { WeatherNow } from '../../components/WeatherNow/WeatherNow';
-import { WeatherWeek } from '../../components/WeatherWeek/WeatherWeek';
-import { fetchWeather } from '../../store/actionCreator/weather';
-import { useTypedSelector } from '../../store/hooks/useTypedSelector';
-import { setDarkMod } from '../../store/actionCreator/settings';
-import { getDarkMode } from '../../utilities/utilities';
+import { Navbar } from '@components/Navbar/Navbar';
+import { WeatherNow } from '@components/WeatherNow/WeatherNow';
+import { WeatherWeek } from '@components/WeatherWeek/WeatherWeek';
+import { fetchWeather } from '@store/actionCreator/weather';
+import { useTypedSelector } from '@store/hooks/useTypedSelector';
+import { setDarkMod } from '@store/actionCreator/settings';
+import { getDarkMode } from '@utilities/utilities';
 
 const Weather: React.FunctionComponent = () => {
   const sunrise = useTypedSelector((state) => state.weather.sunrise);
@@ -23,22 +23,17 @@ const Weather: React.FunctionComponent = () => {
 
   const dispatch = useDispatch();
 
-  const cityName = localStorage.getItem('cityName');
-  const unitsType = localStorage.getItem('unitsType');
-
-  const dark = getDarkMode();
+  useEffect(() => {
+    dispatch(fetchWeather());
+  }, [dispatch]);
 
   useEffect(() => {
-    if (cityName && unitsType) {
-      dispatch(fetchWeather(cityName, unitsType));
-    } else {
-      dispatch(fetchWeather());
-    }
+    const dark = getDarkMode();
+
     if (dark) {
       dispatch(setDarkMod(Boolean(dark)));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
